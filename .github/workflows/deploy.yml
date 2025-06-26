@@ -24,9 +24,9 @@ jobs:
       # 3. Export secrets as env vars for the ECS container task
       - name: Set up environment variables
         run: |
-          echo "FLASK_SECRET=${{ secrets.FLASK_SECRET }}" >> $GITHUB_ENV
-          echo "OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_FLASK_SECRET=${{ secrets.FLASK_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }}" >> $GITHUB_ENV
 
       # 4. Set up Terraform CLI
       - name: Set up Terraform
