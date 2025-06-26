@@ -27,7 +27,7 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 | **Automated CI/CD** | `.github/workflows/deploy.yml` | Build container, push to ECR, run `terraform plan` + `apply` on every push to **main**. |
 | **PostgreSQL demo data** | RDS Postgres (Terraform) | Shows I can provision, secure & query managed databases. |
 
-<details>
+
 
  ![image](https://github.com/user-attachments/assets/4f0dae7c-9370-443a-ac20-5077babef0a1)
 
