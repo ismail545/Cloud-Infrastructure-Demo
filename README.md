@@ -47,35 +47,41 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 
 ⸻
 
-🚀 Quick start
+## 🚀 Quick start
 
-Prereqs:
-• Terraform ≥ 1.1
-• Docker ≥ 24
-• AWS CLI logged into your account
+### Prerequisites
+- **Terraform ≥ 1.1**
+- **Docker ≥ 24**
+- **AWS CLI** logged into your account (`aws configure`)
 
-# 1. Clone and configure secrets
+---
+
+### 1. Clone and configure secrets
+```bash
 git clone https://github.com/ismail545/GCHQ-Infrastructure-Demo.git
 cd GCHQ-Infrastructure-Demo
 
-# set secrets as env vars so terraform can pick them up
+# Set secrets as env vars so Terraform can pick them up
 export TF_VAR_FLASK_SECRET="CHANGE_ME_32_BYTES"
 export TF_VAR_OIDC_CLIENT_ID="your-client-id"
 export TF_VAR_OIDC_CLIENT_SECRET="your-client-secret"
+```
 
-# 2. Build & push container to your ECR
+### 2. Build & push container to your ECR
+```bash
 docker build -t gchq-demo-app:latest .
 aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin <account>.dkr.ecr.eu-west-2.amazonaws.com
 docker tag gchq-demo-app:latest <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
 docker push <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
-
-# 3. Provision infra
+```
+### 3. Provision infra
+```bash
 cd infra
 terraform init
 terraform apply -auto-approve
-
-# After terraform finishes, visit the ALB output URL
-# log in via Auth0 and hit /test-login-failure to test failed login metric
+```
+#### After terraform finishes, visit the ALB output URL
+#### log in via Auth0 and hit /test-login-failure to test failed login metric
 
 
 ⸻
