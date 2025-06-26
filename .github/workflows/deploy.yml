@@ -27,5 +27,7 @@ jobs:
 
       - name: Deploy with Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.1.0
       - run: terraform init -chdir=infra
       - run: terraform apply -chdir=infra -auto-approve
