@@ -31,7 +31,7 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 
 
 <details>
-  <summary><strong>Architecture diagram 2 (click to expand)</strong></summary>
+  <summary><strong>Architecture diagram (click to expand)</strong></summary>
 
 
 ![image](https://github.com/user-attachments/assets/b2de6aab-403e-44b2-b39d-ade03b61a1c6)
