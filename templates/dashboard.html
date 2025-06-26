@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GCHQ Demo - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      background: #f9fafc;
+      color: #222;
+      padding: 2rem;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+    h1 {
+      color: #0c3c78;
+      margin-bottom: 0.5rem;
+    }
+    p.user-info {
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1.25rem;
+      color: #0c3c78;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+    ul.alert-list {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+    ul.alert-list li {
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      background: #fafafa;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      font-size: 0.95rem;
+      color: #333;
+    }
+    .severity-High { border-left: 4px solid #d32f2f; }
+    .severity-Medium { border-left: 4px solid #ff9800; }
+    .severity-Low { border-left: 4px solid #1976d2; }
+    .btn {
+      display: inline-block;
+      margin: 1rem 0.5rem 0 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      color: white;
+      background: #0c3c78;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      border: none;
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background: #092c58;
+    }
+    .api-response {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #e9f4ff;
+      border-radius: 6px;
+      font-family: monospace;
+      word-break: break-all;
+      display: none;
+      text-align: left;
+    }
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .container { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Security Dashboard</h1>
+    <p class="user-info">Logged in as <strong>{{ user['email'] }}</strong></p>
+
+    <h2>Recent Security Alerts</h2>
+    <ul class="alert-list">
+      {% for alert in alerts %}
+        <li class="severity-{{ alert.severity }}">{{ alert.message }}</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Action Buttons -->
+    <a href="/" class="btn">Back to Home</a>
+    <a href="/logout" class="btn">Logout</a>
+    <button id="test-api-btn" class="btn">Test Secret API</button>
+
+    <!-- API Response Display -->
+    <div id="api-response" class="api-response"></div>
+  </div>
+
+  <script>
+    document.getElementById('test-api-btn').addEventListener('click', function() {
+      fetch('/test-secret-api')
+        .then(res => res.json())
+        .then(data => {
+          const apiRespDiv = document.getElementById('api-response');
+          apiRespDiv.style.display = 'block';
+          apiRespDiv.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          const apiRespDiv = document.getElementById('api-response');
+          apiRespDiv.style.display = 'block';
+          apiRespDiv.textContent = 'Error: ' + err;
+        });
+    });
+  </script>
+</body>
+</html>
