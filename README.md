@@ -26,10 +26,6 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 | **PostgreSQL demo data** | RDS Postgres (Terraform) | Shows I can provision, secure & query managed databases. |
 
 
-<details>
-	 <summary><strong>Architecture diagram 1 (click to expand)</strong></summary>
- ![image](https://github.com/user-attachments/assets/4f0dae7c-9370-443a-ac20-5077babef0a1)
-</details>
 
 ⸻
 
