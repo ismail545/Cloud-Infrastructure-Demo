@@ -7,8 +7,6 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 ⸻
 
 
-# GCHQ-Infrastructure-Demo 🚀  
-
 > A two–day proof-of-concept that shows I can design, secure and automate
 > cloud infrastructure – end-to-end – the way an Infrastructure Engineering
 > Specialist at **GCHQ** would expect.
@@ -84,7 +82,7 @@ terraform apply -auto-approve
 
 🗄️ Repository layout
 
-.
+```
 ├── app.py                    # Flask demo app
 ├── Dockerfile                # Container build config
 ├── infra/                    # Terraform IaC
@@ -94,7 +92,7 @@ terraform apply -auto-approve
 ├── .github/workflows/
 │   └── deploy.yml            # GitHub Actions CI/CD pipeline
 ├── README.md                 # Project overview
-
+```
 
 ⸻
 
