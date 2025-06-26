@@ -28,7 +28,16 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 | **PostgreSQL demo data** | RDS Postgres (Terraform) | Shows I can provision, secure & query managed databases. |
 
 <details>
-<summary>Architecture diagram (click to expand)</summary>
+
+ ![image](https://github.com/user-attachments/assets/4f0dae7c-9370-443a-ac20-5077babef0a1)
+
+
+⸻
+
+
+<details>
+  <summary><strong>Architecture diagram (click to expand)</strong></summary>
+
 
 ┌─────────────┐               ┌──────────────────┐
 │   Browser   │──HTTPS──────▶ │     Auth0 IdP    │
@@ -37,101 +46,105 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 │                               ▼
 ┌──────────────────────── AWS ──────────────────────────┐
 │  ┌──────────────────────────────────────────────────┐ │
-│  │  Application Load Balancer (public)             │ │
-│  │  gchq-demo-alb                                   │ │
+│  │ Application Load Balancer (public)               │ │
+│  │ gchq-demo-alb                                    │ │
 │  └─────────────┬────────────────────────────────────┘ │
 │                ▼                                      │
 │     ECS Fargate service (gchq-demo-service)           │
-│     • Flask app container                             │
-│     • IAM task role (decrypt + SSM read only)         │
+│       • Flask app container                           │
+│       • IAM task role (decrypt + SSM read only)       │
 │                │                                      │
 │                ▼                                      │
-│     CloudWatch Logs  ──► Metric Filter ──► Alarm      │
+│     CloudWatch Logs ──► Metric Filter ──► Alarm      │
 │                │                                      │
 │                ▼                                      │
 │     RDS Postgres  ── demo alerts table                │
 │                                                      │
-└────────────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────┘
 
 </details>
 
----
 
-## 🚀 Quick start
 
-> **Prereqs:** Terraform ≥ 1.1, Docker ≥ 24, AWS CLI logged in to your account.
+⸻
 
-```bash
+🚀 Quick start
+
+Prereqs:
+• Terraform ≥ 1.1
+• Docker ≥ 24
+• AWS CLI logged into your account
+
 # 1. Clone and configure secrets
 git clone https://github.com/ismail545/GCHQ-Infrastructure-Demo.git
 cd GCHQ-Infrastructure-Demo
 
-# local only – set once, or use TF_VAR_*
+# set secrets as env vars so terraform can pick them up
 export TF_VAR_FLASK_SECRET="CHANGE_ME_32_BYTES"
-export TF_VAR_OIDC_CLIENT_ID="..."
-export TF_VAR_OIDC_CLIENT_SECRET="..."
+export TF_VAR_OIDC_CLIENT_ID="your-client-id"
+export TF_VAR_OIDC_CLIENT_SECRET="your-client-secret"
 
-# 2. Build & push container (one-liner)
+# 2. Build & push container to your ECR
 docker build -t gchq-demo-app:latest .
-aws ecr get-login-password --region eu-west-2 \
-  | docker login --username AWS --password-stdin <account>.dkr.ecr.eu-west-2.amazonaws.com
+aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin <account>.dkr.ecr.eu-west-2.amazonaws.com
 docker tag gchq-demo-app:latest <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
 docker push <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
 
-# 3. Provision infrastructure
+# 3. Provision infra
 cd infra
 terraform init
 terraform apply -auto-approve
 
-When terraform apply finishes you’ll get an ALB DNS name – open it and log in via Auth0.
-Hit /test-login-failure to simulate a bad login; watch the CloudWatch metric spike. 🎉
+# After terraform finishes, visit the ALB output URL
+# log in via Auth0 and hit /test-login-failure to test failed login metric
+
 
 ⸻
 
 🗄️ Repository layout
 
 .
-├── app.py                    # Flask demo application
-├── Dockerfile                # Container definition
-├── infra/                    # All Terraform modules
+├── app.py                    # Flask demo app
+├── Dockerfile                # Container build config
+├── infra/                    # Terraform IaC
 │   ├── main.tf               # VPC, ECS, RDS, CloudWatch, KMS …
-│   ├── variables.tf          # Sensitive variables (no hard-codes)
-│   └── outputs.tf
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # CI/CD pipeline
-└── README.md                 # You are here
+│   ├── variables.tf          # Sensitive vars
+│   └── outputs.tf            # Export ALB URL, DB address, etc.
+├── .github/workflows/
+│   └── deploy.yml            # GitHub Actions CI/CD pipeline
+├── README.md                 # Project overview
 
-```
+
 ⸻
 
 🔒 Security notes
 	•	Secrets
-	•	Stored in GitHub Actions → Secrets (build stage)
-	•	Stored in AWS SSM Parameter Store + KMS (runtime)
-	•	Least privilege IAM – the ECS task can only decrypt its own secret and read one SSM parameter.
-	•	Logging & detection – every LOGIN_FAILED line increments a metric; alarm after two batches.
-	•	No hard-coded AWS creds – pipeline uses short-lived federated credentials.
+• Build-time: GitHub Actions Secrets
+• Run-time: AWS SSM + KMS (ECS role can only decrypt its own secret)
+	•	Least privilege: ECS task only allowed to ssm:GetParameter & kms:Decrypt.
+	•	No hardcoded credentials: pipeline assumes short-lived AWS credentials.
+	•	Logging & detection: failed logins emit LOGIN_FAILED event into CloudWatch; metric filter raises alarm if ≥2 events in 5 min.
 
 ⸻
 
-🛣️ Roadmap (future improvements)
+🛣️ Roadmap & future improvements
 
 Idea	Reason
-scan_logs.py security check	Parse CloudWatch logs after deploy; fail pipeline if suspicious burst > N.
-ACM certificate + HTTPS listener	End-to-end TLS on the ALB.
-GitHub Actions → OIDC federation	Remove static AWS keys entirely.
-Snyk / trivy container scan	Show secure supply chain.
-Jenkins / AWS CodePipeline flavour	Demonstrate tool-agnostic CI/CD expertise.
+scan_logs.py post-deploy check	Parse CloudWatch logs for suspicious patterns
+ACM + HTTPS listener	End-to-end encryption with trusted certs
+GitHub Actions → OIDC federation	Remove static AWS credentials entirely
+Snyk/Trivy container scan	Shift-left security on image build
+AWS CodePipeline alternative demo	Show you can adapt to other tools too
 
 
 ⸻
 
 🗣️ Why this project matters
 
+GCHQ needs engineers who can translate security principles into fully-automated, robust solutions.
 
-GCHQ’s mission relies on engineers who can translate security principles into fully-automated, reliable solutions.
-Over a focused ~2 days I built, containerised, secured, deployed and instrumented this demo—including alarms and CI/CD—showing the approach I’d bring to larger, mission-critical systems.”
+Over ~2 days I built, containerised, secured, deployed and instrumented this demo — including alarms and CI/CD — showcasing my ability to deliver similar solutions at scale.
 
-Thanks for reviewing – looking forward to discussing it!
-Ismail Kamran 
+Thanks for reviewing — I look forward to discussing it further!
+— Ismail Kamran
+
