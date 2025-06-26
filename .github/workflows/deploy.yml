@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Configure AWS credentials from GitHub Secrets
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -19,15 +21,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
 
+      # 3. Export secrets as env vars for the ECS container task
       - name: Set up environment variables
         run: |
           echo "FLASK_SECRET=${{ secrets.FLASK_SECRET }}" >> $GITHUB_ENV
           echo "OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }}" >> $GITHUB_ENV
           echo "OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }}" >> $GITHUB_ENV
 
-      - name: Deploy with Terraform
+      # 4. Set up Terraform CLI
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.1.0
-      - run: terraform init -chdir=infra
-      - run: terraform apply -chdir=infra -auto-approve
+
+      # 5. Run `terraform init` inside the infra directory
+      - name: Terraform init
+        run: terraform init
+        working-directory: infra
+
+      # 6. Run `terraform apply` inside the infra directory
+      - name: Terraform apply
+        run: terraform apply -auto-approve
+        working-directory: infra
