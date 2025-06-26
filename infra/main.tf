@@ -211,8 +211,13 @@ resource "aws_ecs_task_definition" "app" {
       ]
 
       environment = [
-      
-      ]
+        { name = "AWS_REGION",        value = "eu-west-2" },          # fine
+        { name = "FLASK_SECRET",      value = var.FLASK_SECRET },
+        { name = "OIDC_CLIENT_ID",    value = var.OIDC_CLIENT_ID },
+        { name = "OIDC_CLIENT_SECRET",value = var.OIDC_CLIENT_SECRET },
+        { name = "OIDC_METADATA_URL", value = "https://dev-13zvx8spf52ydvnk.uk.auth0.com/.well-known/openid-configuration" },
+        { name = "OIDC_DOMAIN",       value = "dev-13zvx8spf52ydvnk.uk.auth0.com" }
+]
 
       logConfiguration = {
         logDriver = "awslogs"
