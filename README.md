@@ -28,39 +28,20 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 | **PostgreSQL demo data** | RDS Postgres (Terraform) | Shows I can provision, secure & query managed databases. |
 
 
-
+<details>
+	 <summary><strong>Architecture diagram 1 (click to expand)</strong></summary>
  ![image](https://github.com/user-attachments/assets/4f0dae7c-9370-443a-ac20-5077babef0a1)
-
+</details>
 
 ⸻
 
 
 <details>
-  <summary><strong>Architecture diagram (click to expand)</strong></summary>
+  <summary><strong>Architecture diagram 2 (click to expand)</strong></summary>
 
 
-┌─────────────┐               ┌──────────────────┐
-│   Browser   │──HTTPS──────▶ │     Auth0 IdP    │
-└─────────────┘               └──────────────────┘
-▲                               │ OIDC
-│                               ▼
-┌──────────────────────── AWS ──────────────────────────┐
-│  ┌──────────────────────────────────────────────────┐ │
-│  │ Application Load Balancer (public)               │ │
-│  │ gchq-demo-alb                                    │ │
-│  └─────────────┬────────────────────────────────────┘ │
-│                ▼                                      │
-│     ECS Fargate service (gchq-demo-service)           │
-│       • Flask app container                           │
-│       • IAM task role (decrypt + SSM read only)       │
-│                │                                      │
-│                ▼                                      │
-│     CloudWatch Logs ──► Metric Filter ──► Alarm      │
-│                │                                      │
-│                ▼                                      │
-│     RDS Postgres  ── demo alerts table                │
-│                                                      │
-└──────────────────────────────────────────────────────┘
+![image](https://github.com/user-attachments/assets/b2de6aab-403e-44b2-b39d-ade03b61a1c6)
+
 
 </details>
 
@@ -138,10 +119,6 @@ AWS CodePipeline alternative demo	Show you can adapt to other tools too
 
 
 ⸻
-
-🗣️ Why this project matters
-
-GCHQ needs engineers who can translate security principles into fully-automated, robust solutions.
 
 Over ~2 days I built, containerised, secured, deployed and instrumented this demo — including alarms and CI/CD — showcasing my ability to deliver similar solutions at scale.
 
