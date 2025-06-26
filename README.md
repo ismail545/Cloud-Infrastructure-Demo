@@ -98,24 +98,25 @@ terraform apply -auto-approve
 
 ⸻
 
-🔒 Security notes
-	•	Secrets
-• Build-time: GitHub Actions Secrets
-• Run-time: AWS SSM + KMS (ECS role can only decrypt its own secret)
-	•	Least privilege: ECS task only allowed to ssm:GetParameter & kms:Decrypt.
-	•	No hardcoded credentials: pipeline assumes short-lived AWS credentials.
-	•	Logging & detection: failed logins emit LOGIN_FAILED event into CloudWatch; metric filter raises alarm if ≥2 events in 5 min.
+## 🔒 Security Notes
 
+- **Secrets**  
+  - **Build-time:** GitHub Actions secrets  
+  - **Run-time:** AWS SSM + KMS (ECS role can only decrypt its own secret)
+- **Least privilege:** ECS task role restricted to `ssm:GetParameter` and `kms:Decrypt`  
+- **No hardcoded credentials:** CI/CD pipeline assumes short-lived AWS credentials only  
+- **Logging & detection:** Failed logins emit `LOGIN_FAILED` events to CloudWatch; metric filter raises alarm if ≥2 events in 5 mins
 ⸻
 
-🛣️ Roadmap & future improvements
+## 🛣️ Roadmap & Future Improvements
 
-Idea	Reason
-scan_logs.py post-deploy check	Parse CloudWatch logs for suspicious patterns
-ACM + HTTPS listener	End-to-end encryption with trusted certs
-GitHub Actions → OIDC federation	Remove static AWS credentials entirely
-Snyk/Trivy container scan	Shift-left security on image build
-AWS CodePipeline alternative demo	Show you can adapt to other tools too
+| Idea                                | Reason                                              |
+|-------------------------------------|-----------------------------------------------------|
+| scan_logs.py post-deploy check      | Parse CloudWatch logs for suspicious patterns       |
+| ACM + HTTPS listener                 | End-to-end encryption with trusted certificates     |
+| GitHub Actions → OIDC federation     | Remove static AWS credentials entirely             |
+| Snyk/Trivy container scan            | Shift-left security on image build                 |
+| AWS CodePipeline alternative demo    | Show you can adapt to other tools too               |
 
 
 ⸻
