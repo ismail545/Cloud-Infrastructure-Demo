@@ -3,17 +3,13 @@
 
 
 # Cloud-Infrastructure-Demo
-Demo of a secure, cloud-native web app built with AWS (ECS Fargate, RDS, KMS &amp; SSM), Terraform, Flask, and Auth0. Showcases Infrastructure-as-Code, secrets management, authentication, logging/monitoring, and a simple CI/CD pipeline — built quickly to demonstrate skills for the GCHQ Infrastructure Engineering Specialist role.
-
-Below is a complete README.md you can drop straight into the root of your repository.
-Feel free to tweak wording or add screenshots/diagrams, but it already hits the usual “wow”-points reviewers look for.
+Demo of a secure, cloud-native web app built with AWS (ECS Fargate, RDS, KMS &amp; SSM), Terraform, Flask, and Auth0. Showcases Infrastructure-as-Code, secrets management, authentication, logging/monitoring, and a simple CI/CD pipeline — built quickly to demonstrate skills for IT/Infrastructure Specialist roles.
 
 ⸻
 
 
 > A two–day proof-of-concept that shows I can design, secure and automate
-> cloud infrastructure – end-to-end – the way an Infrastructure Engineering
-> Specialist at **GCHQ** would expect.
+> cloud infrastructure – end-to-end 
 
 ---
 
@@ -71,8 +67,8 @@ export TF_VAR_OIDC_CLIENT_SECRET="your-client-secret"
 ```bash
 docker build -t cloud-demo-app:latest .
 aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin <account>.dkr.ecr.eu-west-2.amazonaws.com
-docker tag cloud-demo-app:latest <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
-docker push <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
+docker tag cloud-demo-app:latest <account>.dkr.ecr.eu-west-2.amazonaws.com/cloud-demo-app:latest
+docker push <account>.dkr.ecr.eu-west-2.amazonaws.com/cloud-demo-app:latest
 ```
 ### 3. Provision infra
 ```bash
