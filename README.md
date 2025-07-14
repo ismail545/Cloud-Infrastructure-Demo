@@ -58,8 +58,8 @@ Feel free to tweak wording or add screenshots/diagrams, but it already hits the 
 
 ### 1. Clone and configure secrets
 ```bash
-git clone https://github.com/ismail545/GCHQ-Infrastructure-Demo.git
-cd GCHQ-Infrastructure-Demo
+git clone https://github.com/ismail545/Cloud-Infrastructure-Demo.git
+cd Cloud-Infrastructure-Demo
 
 # Set secrets as env vars so Terraform can pick them up
 export TF_VAR_FLASK_SECRET="CHANGE_ME_32_BYTES"
@@ -69,9 +69,9 @@ export TF_VAR_OIDC_CLIENT_SECRET="your-client-secret"
 
 ### 2. Build & push container to your ECR
 ```bash
-docker build -t gchq-demo-app:latest .
+docker build -t cloud-demo-app:latest .
 aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin <account>.dkr.ecr.eu-west-2.amazonaws.com
-docker tag gchq-demo-app:latest <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
+docker tag cloud-demo-app:latest <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
 docker push <account>.dkr.ecr.eu-west-2.amazonaws.com/gchq-demo-app:latest
 ```
 ### 3. Provision infra
